@@ -1,37 +1,41 @@
 
 var ProductCategoryRow = React.createClass({
-  render: function () {
+  render () {
     return (<tr><th colSpan="2">{this.props.category}</th></tr>);
   }
 })
 
 var ProductRow = React.createClass({
-  render: function() {
+  render () {
+    console.log(this.props)
     var name = this.props.product.stocked ?
       this.props.product.name :
       <span style={{color: 'red'}}>
         {this.props.product.name}
       </span>;
     return (
-      <tr id="item">
-        <td>{name}</td>
-        <td>{this.props.product.price}</td>
+      <tr>
+        <td id="item">{name}</td>
+        <td id="item">{this.props.product.price}</td>
       </tr>
     );
   }
 });
 
 var ProductTable = React.createClass({
-  render: function() {
+  render () {
     var rows = [];
     var lastCategory = null;
     this.props.products.forEach(function(product) {
+      if (product.name.indexOf(this.props.filterText) === -1 || (!product.stocked && this.props.inStockOnly)) {
+        return;
+      }
       if (product.category !== lastCategory) {
         rows.push(<ProductCategoryRow category={product.category} key={product.category} />);
       }
       rows.push(<ProductRow product={product} key={product.name} />);
       lastCategory = product.category;
-    });
+    }.bind(this));
     return (
       <table>
         <thead>
@@ -47,12 +51,12 @@ var ProductTable = React.createClass({
 });
 
 var SearchBar = React.createClass({
-  render: function() {
+  render () {
     return (
       <form>
-        <input type="text" placeholder="Search..." />
+        <input type="text" placeholder="Search..." id="search" value={this.props.filterText} />
         <p>
-          <input type="checkbox" />
+          <input type="checkbox" checked={this.props.inStockOnly}/>
           {' '}
           Only show products in stock
         </p>
@@ -62,11 +66,24 @@ var SearchBar = React.createClass({
 });
 
 var FilterableProductTable = React.createClass({
-  render: function() {
+  getInitialState () {
+    return {
+      filterText: '',
+      inStockOnly: false
+    }
+  },
+  render () {
     return (
-      <div>
-        <SearchBar />
-        <ProductTable products={this.props.products} />
+      <div id="FilterableProductTable">
+        <SearchBar
+          filterText={this.state.filterText}
+          inStockOnly={this.state.inStockOnly}
+        />
+        <ProductTable
+          products={this.props.products}
+          filterText={this.state.filterText}
+          inStockOnly={this.state.inStockOnly}
+        />
       </div>
     );
   }

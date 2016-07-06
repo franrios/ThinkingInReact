@@ -60,6 +60,9 @@ var SearchBar = React.createClass({
           {' '}
           Only show products in stock
         </p>
+        <button type='button'>
+          Hide/Show
+        </button>
       </form>
     );
   }
@@ -69,7 +72,8 @@ var FilterableProductTable = React.createClass({
   getInitialState () {
     return {
       filterText: '',
-      inStockOnly: false
+      inStockOnly: false,
+      hide: false
     }
   },
   render () {

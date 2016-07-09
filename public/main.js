@@ -53,11 +53,16 @@ var ProductTable = React.createClass({
 });
 
 var SearchBar = React.createClass({
+  _handleClick () {
+    this.setState({
+      hide: !this.props.hide
+    })
+  },
   handleChange () {
     this.props.onUserImput(
       this.refs.filterTextInput.value,
-      this.refs.inStockOnlyInput.checked,
-      this.refs.hideInput.checked
+      this.refs.inStockOnlyInput.checked
+    //  this.refs.hideInput.checked
     )
   },
   render () {
@@ -79,12 +84,9 @@ var SearchBar = React.createClass({
           Only show products in stock
         </p>
         <p>
-          <input type="checkbox"
-          checked={this.props.hide}
-          ref='hideInput'
-          onChange={this.handleChange}/>
-          {' '}
-          Hide all products
+          <button onClick={this._handleClick.bind(this)}>
+          {((this.props.hide) ? 'Hide' : 'Show') + ' all products'}
+          </button>
         </p>
       </form>
     );
